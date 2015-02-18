@@ -107,6 +107,8 @@ var ArrayValidatorProxy = Ember.ArrayProxy.extend(setValidityMixin, {
   validators: Ember.computed.alias('content')
 });
 
+// Added setNested function to allow validation of deepter nested objects
+// See: https://github.com/dockyard/ember-validations/pull/150
 var setNested = function (target, path, value) {
   var base=target,
       properties = path.split('.');
@@ -677,6 +679,9 @@ Ember.Validations.validators.local.Presence = Ember.Validations.validators.Base.
     }
   },
   call: function() {
+
+    // Swapped out isEmpty for isBlank so that whitespace isn't counted as a value
+    // See: https://github.com/dockyard/ember-validations/issues/126
     if (Ember.isBlank(this.model.get(this.property))) {
       this.errors.pushObject(this.options.message);
     }
